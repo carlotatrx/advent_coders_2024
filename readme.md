@@ -19,3 +19,5 @@
      (__) (__)                 \
                                 \
 ```
+
+[the elves are waiting to be saved](https://adventofcode.com/2024)
