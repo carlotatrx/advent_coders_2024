@@ -8,11 +8,8 @@ with open('/scratch2/ccorbella/code/adventcode2024/carlota/day02_input.txt', 'r'
     
 #%% part 1, monotonic increase/ decrease
 
-result = 0
-for line in data:
-    
-    if (len(np.unique(line)) != len(line)): # has equal numbers
-        result += 0
+def safe_reports(line):
+    if (len(np.unique(line)) != len(line)): return 0 # has equal numbers
     else:
         pos, neg, inrange = False, False, True
         for i in range(len(line)-1):
@@ -22,13 +19,26 @@ for line in data:
             
             if abs(num) > 3:
                 inrange = False
-                break
-        if (pos and neg): result += 0
-        elif inrange: result += 1
+                return 0
+        if (pos and neg): return 0
+        elif inrange: return 1
+    
+result = 0
+for line in data:
+    result+= safe_reports(line)
             
 print(result)
             
-            
-            
-        
-
+#%% part 2
+result = 0
+for line in data:
+    if safe_reports(line)==0:
+        # try removing one number at a time
+        for i in range(len(line)):
+            new_line = line[:i]+line[i+1:]
+            if safe_reports(new_line)==1:
+                result+=1
+                break
+    else: result += 1
+    
+print(result)
