@@ -4,8 +4,6 @@ import numpy as np
 with open('/scratch2/ccorbella/code/adventcode2024/carlota/day02_input.txt', 'r') as file:
     data = [[int(num) for num in line.split()] for line in file]
     
-
-    
 #%% part 1, monotonic increase/ decrease
 
 def safe_reports(line):
