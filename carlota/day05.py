@@ -39,45 +39,30 @@ for li in lists:
         print(f"Error: {e} - Sequence {li} contains elements not in valid_list.")
 print(result)
 
-#%% Function to detect cycles
-from collections import defaultdict
 
-def find_cycle(pairs):
-    graph = defaultdict(list)
-    visited = set()
-    stack = []
-    in_stack = set()
+#%%
 
-    # Build the graph
-    for a, b in pairs:
-        graph[a].append(b)
 
-    def visit(node):
-        if node in in_stack:  # Cycle detected
-            return stack[stack.index(node):]  # Return the cycle
-        if node in visited:  # Already processed
-            return None
+def rules_valid(update,rules) -> bool:
+    for r in rules:
+        if r[0] in update and r[1] in update and update.index(r[0]) > update.index(r[1]):
+            return False
+        else:
+            continue
+    return True
 
-        visited.add(node)
-        stack.append(node)
-        in_stack.add(node)
-        for neighbor in graph[node]:
-            cycle = visit(neighbor)
-            if cycle:
-                return cycle
-        stack.pop()
-        in_stack.remove(node)
-        return None
+rules = pairs
+updates = lists
+valid_updates = list()
+middle_pages = list()
+for u in updates:
+    if rules_valid(u,rules):
+        valid_updates.append(u)
 
-    for node in graph:
-        cycle = visit(node)
-        if cycle:
-            return cycle
-    return None
+for u in valid_updates:
+    middle = int((len(u)-1)/2)
+    middle_pages.append(u[middle])
+print(middle_pages)
+sum([int(x) for x in middle_pages])
 
-cycle = find_cycle(pairs)
 
-# Check if there are numbers not part of the cycle
-all_nodes = {a for a, b in pairs}.union({b for a, b in pairs})
-cycle_set = set(cycle) if cycle else set()
-non_cycle_nodes = all_nodes - cycle_set
