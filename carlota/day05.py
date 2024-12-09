@@ -13,56 +13,44 @@ with open('/scratch2/ccorbella/code/adventcode2024/carlota/day05_input.txt', 'r'
 
 
 #%% part 1
-valid_list = []
 
-for a,b in pairs:
-    if a not in valid_list:
-        valid_list.append(a)
-    if b not in valid_list:
-        valid_list.append(b)
-    
-    # If 'b' is before 'a', reorder
-    if valid_list.index(b) < valid_list.index(a):
-        valid_list.remove(b)
-        valid_list.insert(valid_list.index(a) + 1, b)
+valid_lists = list()
+invalid_lists = list()
 
-result = 0
 for li in lists:
-    try:
-        indices = [valid_list.index(num) for num in li]
-        if indices == sorted(indices): # they are in the correct order
-            print(True)
-            result += li[int((len(li)-1)/2)]
-        else:
-            print(f"Sequence {li} is not valid.")
-    except ValueError as e:
-        print(f"Error: {e} - Sequence {li} contains elements not in valid_list.")
+    li_ordered = True
+    
+    for pair in pairs:
+        # check if any num in the pairs is in the list
+        a, b = pair[0], pair[1]
+        if a in li and b in li:
+            # if there is only one of the two in the list we don't care
+            if li.index(a) > li.index(b): # they are  NOT in the correct order
+                li_ordered = False
+                break
+    if li_ordered:
+        valid_lists.append(li)
+    else:
+        invalid_lists.append(li)
+    
+result = 0
+for li in valid_lists:
+    result += li[int((len(li)-1)/2)]
+
 print(result)
 
-
 #%%
+result2 = 0
+
+for li in invalid_lists:
+    for pair in pairs:
+        a, b = pair[0], pair[1]
+        if a in li and b in li:
+            if li.index(a) > li.index(b):
+                li[li.index(a)] = b
+                li[li.index(b)] = a
+    result2 += li[int((len(li)-1)/2)]
 
 
-def rules_valid(update,rules) -> bool:
-    for r in rules:
-        if r[0] in update and r[1] in update and update.index(r[0]) > update.index(r[1]):
-            return False
-        else:
-            continue
-    return True
-
-rules = pairs
-updates = lists
-valid_updates = list()
-middle_pages = list()
-for u in updates:
-    if rules_valid(u,rules):
-        valid_updates.append(u)
-
-for u in valid_updates:
-    middle = int((len(u)-1)/2)
-    middle_pages.append(u[middle])
-print(middle_pages)
-sum([int(x) for x in middle_pages])
 
 
