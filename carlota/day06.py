@@ -45,10 +45,11 @@ from copy import deepcopy
 
 num_loops = 0
 
-for cell in visited_cells[1:]: # starting cell doesn't count bc guard is there now
-    gridcopy = deepcopy(grid)
-    gridcopy[cell[0]][cell[1]] = "#"
+for cell in visited_cells[1:]:          # starting cell doesn't count bc guard is there now
+    gridcopy = deepcopy(grid)           # deepcopy so as not to modify original grid as well
+    gridcopy[cell[0]][cell[1]] = "#"    # try putting an object there
     
+    # reset direction and num of steps
     x_now, y_now = start_pos_x, start_pos_y # 45, 42 or 46, 43 with edges
     steps = 0
     direction_now = 0
@@ -65,7 +66,7 @@ for cell in visited_cells[1:]: # starting cell doesn't count bc guard is there n
             
         steps += 1
     
-    if steps == 6000: num_loops += 1
+    if steps == 6000: num_loops += 1 # the guard is stuck in a loop
 
 print(num_loops)
 
