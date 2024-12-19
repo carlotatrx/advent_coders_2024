@@ -15,14 +15,37 @@ updated_data = list()
 start_with = 0
 for i, letter in enumerate(data):
     if i%2 != 0: # odd positions are points
-        updated_data.append('.'*int(letter))
+        updated_data.extend(['.']*int(letter))
     else:
-        updated_data.append(str(start_with)*int(letter))
+        updated_data.extend([start_with]*int(letter))
         start_with += 1
 
-updated_data = [item for item in updated_data if item != ''] # remove empty strings
+def checksum(data):
+    result = 0
+    for pos, num in enumerate(updated_data):
+        if num != '.':
+            result += pos*num
+    return(result)
+ 
+#%% part 1
 
+now = 0
+last = len(updated_data)-1
 
+while now < last:
+    if updated_data[now] == '.':
+        while last > now and updated_data[last] == '.':
+            last -= 1 # reduce positions from the back if there's no number
+        if last > now:
+            updated_data[now] = updated_data[last]
+            updated_data[last] = '.' # to avoid repeating
+    now += 1
+
+print(checksum(updated_data))
+
+#%% part 2
+
+#%%
 str_data = str()
 start_with = 0
 for i, letter in enumerate(data):
