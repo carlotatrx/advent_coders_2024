@@ -9,7 +9,7 @@ Created on Wed Dec 11 21:16:47 2024
 with open('/scratch2/ccorbella/code/adventcode2024/carlota/day09_input.txt') as file:
     data = file.read().strip()
     
-#%%
+#%% updated_data
 
 updated_data = list()
 start_with = 0
@@ -44,31 +44,33 @@ while now < last:
 print(checksum(updated_data))
 
 #%% part 2
+import numpy as np
 
-#%%
-str_data = str()
-start_with = 0
-for i, letter in enumerate(data):
-    if i%2 != 0: # odd positions are points
-        str_data += '.'*int(letter)
-    else:
-        str_data += str(start_with)*int(letter)
-        start_with += 1
-        
-with open('/scratch2/ccorbella/code/adventcode2024/carlota/day09_str.txt', 'w') as file:
-    file.write(str_data)
 
-# new_data = str_data.copy()
+last = len(updated_data)-1
 
-pos_now = 0
-end_pos = -1
-while(str_data):
-    if str_data[pos_now] == '.':
-        while(str_data[end_pos] == '.'):
-            end_pos -= 1
-        
-        str_data[pos_now] = str_data[end_pos]
-        str_data = str_data[:-1]
-        
-with open('/scratch2/ccorbella/code/adventcode2024/carlota/day09_strfinal.txt', 'w') as file:
-    file.write(str_data)
+# create variable of zeros and ones depending on if it's empty (0) or full with a number (1)
+filled = []
+for i in updated_data:
+    filled.extend([1]) if isinstance(i,int) else filled.extend([0])
+
+while last > 0 and 0 in filled[:last]:
+    if updated_data[last] != '.':
+        current_num = updated_data[last]
+        howmany_current_num = 0
+        while updated_data[last] == current_num:
+            howmany_current_num += 1
+            last -= 1
+        # now we have how many numbers there are
+        print(last, current_num, howmany_current_num, updated_data)
+        for i in range(len(filled) - howmany_current_num + 1):
+            if np.array_equal(filled[i:i + howmany_current_num], [0] * howmany_current_num):
+                updated_data[i:i + howmany_current_num] = [current_num] * howmany_current_num # move the blocks
+                filled[i:i + howmany_current_num] = [1] * howmany_current_num # mark the position as filled
+                
+                updated_data[last+1: last + howmany_current_num+1] = ['.'] * howmany_current_num # remove the numbers from the data
+                break
+            
+    else: last -= 1
+    
+print(checksum(updated_data))
